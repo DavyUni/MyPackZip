@@ -1,0 +1,82 @@
+man(ISO)                 Especificación de la función  insertar_fichero               man(ISO)
+
+NOMBRE
+       insertar_fichero - inserta un fichero en otro fichero con formato mypackzip
+
+SINOPSIS
+      #include "s_header.h"
+      int insertar_fichero(char * file_mypackzip, char * file_dat, int index);
+
+DESCRIPCIÓN
+
+      La función insertar_fichero inserta el fichero file_dat en el fichero file_mypackzip
+      con formato mypackzip.
+      El registro (s_header) de la posición index se debe actualizar con la información de
+      file_dat.
+      Si file_mypackzip no existe o está vacío, se debe crear el fichero file_mypackzip y
+      se añadirá file_dat en la posición correpondiente a index
+      Si el registro (s_header) correspondiente ya estaba ocupado, la función no debe
+      modificar file_mypackzip y rettornará un códio de error (ver sección de errores).
+
+      index debe ser un valor de 0 a NUM_HEADERS-1 donde NUM_HEADERS es en número máximo de
+      ficheros/registros que pueda llegar a contener un fichero de tipo mypackzip.
+      El formato de file_mypackzip se describe en la estructura s_header (ver s_header.h).
+
+VALOR DE RETORNO
+       Si todo funciona correctamente, insertar_fichero devolverá el índice del
+       s_header(posición) donde ha insertado file_dat (de 0 a NUM_HEADERS-1).
+       En caso contrario no actualizará/creará el fichero file_mypackzip y la función
+       retornará los errores indicados en el apartado de ERRORES.
+
+MEJORAS OPCIONALES
+       Si index es -1 file_dat se insertará en el primer s_header libre del archivo
+       file_mypackzip y retornará el índice correspondiente al s_header donde se ha
+       insertado.
+
+
+ERRORES
+       E_OPEN1   (-1)
+           No se puede abrir o crear file_mypackzip.
+       E_OPEN2   (-2)
+           No se puede abrir  fich_origen.
+       E_POS1    (-3)
+           Número de index erroneo
+       E_POS2    (-4)
+           index hare referencia a un s_header que ya contiene datos válidos.
+       E_DESCO  (-99)
+           Otro tipo de errores
+
+NOTAS
+       Nota1: El programa que utilice esta función , deberá informar por la salida
+              de error estándar un mensaje indicando el tipo de error.
+
+      Ejemplo de utilización:
+      Se supone que se utiliza compilación separada y el código (en lenguaje C) de la función
+      insertar_fichero se encuentra en un fichero diferente.
+      En el ejemplo de uso, la función inserta el fichero "./fichero3.dat" en la  posición 5
+      del fichero "./ejemplo.mpz".
+      "ejemplo.mpz" deber ser un fichero con formato mypackzip.
+
+      #include "s_header.h"
+      extern int insertar_fichero(char * file_mypackzip, char * file_dat,  int index );
+      ...
+      unsigned int ret;
+
+      n = insertar_fichero("./ejemplo.mpz", "./fichero3.dat", 5);
+      if (n!=5) // Error
+      {
+          ....
+      }
+      ...
+
+COMPATIBILIDAD
+       insertar_fichero() debería funcionar en cualquier sistema UNIX.
+
+VEASE TAMBIEN
+       mypackzip(ISO), extraer_fichero(ISO).
+
+
+AUTOR
+       Iyán Álvarez, Iker Fernández, Davy Wellinger
+
+1.0                               21 Mar 2021                        man(ISO)

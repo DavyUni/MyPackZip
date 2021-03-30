@@ -1,0 +1,64 @@
+man(ISO)               Especificación de la función extraer_fichero                man(ISO)
+
+NOMBRE
+      extraer_fichero - extrae un fichero de otro fichero con formato mypackzip.
+
+SINOPSIS
+      #include "s_header.h"
+      int extraer_fichero(char * file_mypackzip, int index);
+
+DESCRIPCIÓN
+      La función extraer_fichero extrae un fichero del fichero file_mypackzip.
+      El fichero a extraer (nombre, datos,...) se corresponde con la información indicada
+      en el registro s_header que se encuentra en la posición index de file_mypackzip
+      (ver s_header.h).
+
+      index debe ser un valor de 0 a NUM_HEADERS-1 donde NUM_HEADERS es en número máximo de
+      ficheros/registros que pueda llegar a contener un fichero de tipo mypackzip.
+
+VALOR DE RETORNO
+       Si todo funciona correctamente, extraer_fichero devolverá cero. En caso contrario
+       no creará el fichero a extraer y retornará los errores indicados en el apartado de
+       ERRORES.
+
+ERRORES
+       E_OPEN   (1)
+           No se puede abrir file_mypackzip.
+       E_POS    (2)
+           Número de registro erróneo (index) .
+       E_DESCO  (99)
+           Otro tipo de errores
+
+NOTAS
+      Nota1: En caso de errores, el programa que utilice esta función , deberá informar por
+             la salida estándar de errores un mensaje indicando el tipo de error.
+
+      Ejemplo de utilización:
+      Se supone que se utiliza compilación separada y el código (en lenguaje C) de la función
+      extraer_fichero se encuentra en un fichero diferente.
+      En el ejemplo de uso, la función extrae el fichero que se encuentre en la posición 2
+      el fichero "./ejemplo.mpz".
+      "./ejemplo.mpz" deber ser un fichero con formato mypackzip.
+
+      #include "s_header.h"
+      extern int extraer_fichero(char * file_mypackzip, unsigned int index);
+      ...
+      int ret;
+      n = extraer_fichero("./ejemplo.mpz", 2);
+      if (n!=0) // Error
+      {
+          ....
+      }
+      ...
+
+
+COMPATIBILIDAD
+       extraer_fichero() debería funcionar en cualquier sistema UNIX.
+
+VEASE TAMBIEN
+       createmypackzip(ISO), insertar_fichero(ISO).
+
+AUTOR
+       Iyán Álvarez, Iker Fernández, Davy Wellinger
+
+1.0                               21 Mar 2021                        man(ISO)

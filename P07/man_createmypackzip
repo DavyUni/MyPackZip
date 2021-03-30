@@ -1,0 +1,62 @@
+man(ISO)                Especificación de createmypackzip                     man(ISO)
+
+NOMBRE
+     createmypackzip - crea un fichero de tipo myzip con un solo fichero de datos
+
+UTILIZACION
+     ./createmypackzip fich_origen fich_destino
+
+DESCRIPCION
+     createmypackzip  debe crear el fich_destino con formato myzip con
+     el contenido de datos de fich_origen   
+     El formato de mypackzip es el indicado en la siguiente figura:
+
+                         +++++++++++++++++++++++
+                         + struct s_header 0   +
+                         +---------------------+
+                         + struct s_header 1   +
+                         +---------------------+
+                         +        ...          +
+                         +---------------------+
+                         + struct s_header n-1 +
+                         +++++++++++++++++++++++
+                         +                     +
+                         +    Data File 0      +
+                         +---------------------+
+                         +    Data File 1      +
+                         +---------------------+
+                         +        ...          +
+                         +---------------------+
+                         +    Data File n-1    +
+                         +++++++++++++++++++++++
+
+     El fich_destino en primer lugar contiene un vector de NUM_HEADERS de cabeceras
+     de (struct s_header). Seguido al vector de cabeceras deben estar los datos de
+     fich_origen.
+     En la primera cabecera (s_header0) debe tener la información realativa a
+     fich_origen.
+     El formato de cada cabecera es el indicado en la estructura de datos s_header.
+     La estructura s_header está definida en el struct  s_header y se compone a su 
+     vez de dos tipos de datos. La información de control del fichero (FileInfo) y
+     un campo de relleno Dummy. Veáse s_header.h.
+
+VALORES DE SALIDA
+       En las siguientes situaciones no realizará la copia (comprimida o no) y devolverá 
+       un código de error, informando además por la salida estándar de errores un mensaje 
+       indicando el tipo de error:
+          1: Número de argumentos erróneo.
+          2: No se puede abrir fich_origen.
+          3: No se puede crear/abrir fich_destino.
+          4: Otro tipo de errores.
+       En caso contrario (si no hay errores) devuelve 0.
+
+COMPATIBILIDAD
+       createmypackzip debería funcionar en cualquier sistema UNIX.
+
+VEASE TAMBIEN
+       lseek(2), open(2), write(2), sprintf(3).
+
+AUTOR
+       Iyán Álvarez, Iker Fernández, Davy Wellinger
+
+1.0                                   6 Mar 2021                           man(ISO)

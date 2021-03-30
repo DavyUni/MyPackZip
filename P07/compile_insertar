@@ -1,0 +1,5 @@
+gcc insertar_fichero_main.c -c
+gcc insertar_fichero.c -c
+gcc insertar_fichero.o insertar_fichero_main.o -o insertfilemypackzip
+rm insertar_fichero.o
+rm insertar_fichero_main.o

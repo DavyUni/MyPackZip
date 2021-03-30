@@ -1,0 +1,5 @@
+gcc extraer_fichero_main.c -c
+gcc extraer_fichero.c -c
+gcc extraer_fichero.o extraer_fichero_main.o -o extractfilemypackzip
+rm extraer_fichero.o
+rm extraer_fichero_main.o
