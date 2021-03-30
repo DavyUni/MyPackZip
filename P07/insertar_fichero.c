@@ -38,12 +38,17 @@ int insertar_fichero(char * file_mypackzip, char * file_dat, int index) {
 
     int size, size_mypackzip, n, i, m;
 
+
+    //Para ficheros:
+    char buff[MAX_FILE_NAME];
+    ssize_t c_read=0;
+
     // Control index:
     if (index > NUM_HEADERS) {
         return (E_POS1);
     }
 
-    // Para enlaces symbolicos
+    // Para enlaces symbolicos:
     ssize_t len;
     char bufff[MAX_FILE_NAME];
 
@@ -107,13 +112,16 @@ int insertar_fichero(char * file_mypackzip, char * file_dat, int index) {
         lseek(fd_mypackzip, 0, SEEK_SET);
         n = write(fd_mypackzip, &mypackHeaders, sizeof(mypackHeaders));
         if (mHeader0.FileInfo.FileType == 'r') {
-            // Leer y escribir datos (necesario aqui)
-            char buff[size];
+            // Leer y escribir datos:
             lseek(fd_dat, 0, SEEK_SET);
-            read(fd_dat, buff, size);
             lseek(fd_mypackzip, mHeader0.FileInfo.DatPosition, SEEK_SET);
-            m = write(fd_mypackzip, buff, sizeof(buff));
-            if (n != sizeof(mypackHeaders) || m != sizeof(buff)) {
+            while ( (c_read = read(fd_dat, buff, MAX_FILE_NAME))> 0){
+
+                m = write(fd_mypackzip, buff, c_read );
+
+            }
+
+            if (n != sizeof(mypackHeaders) || m != c_read) {
                 close(fd_mypackzip);
                 close(fd_dat);
                 return E_DESCO;
@@ -125,8 +133,11 @@ int insertar_fichero(char * file_mypackzip, char * file_dat, int index) {
                if( (len = readlink(file_dat, bufff, MAX_FILE_NAME))!=-1);
                 bufff[len]='\0';
 
-
-                //TODO if -1!
+                if(len==-1){ //Prueba de error.
+                    close(fd_mypackzip);
+                    close(fd_dat);
+                    return (E_DESCO);
+                }
 
                 printf("DATASIZE: %ld\n",mHeader0.FileInfo.DataSize);
 
